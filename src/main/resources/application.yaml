@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: rustpbx-java
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite::resource:database.db
+  ai:
+    openai:
+      api-key: your-openai-api-key
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      chat:
+        options:
+          model: qwen-plus
+          temperature: 0.7
+    vectorstore:
+      pinecone:
+        api-key: your-pinecone-api-key
+        environment: us-east-1
+        project-id: your-pinecone-project-id
+  profiles:
+    active: dev
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+server:
+  port: 8888
+  servlet:
+    context-path: /api
+    session:
+      cookie:
+        max-age: 2592000 # 30 days in seconds
+
+# mybatis-plus配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: is_deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html  # 设置 Swagger UI 界面的访问路径，访问该路径可查看生成的 API 文档界面。
+    tags-sorter: alpha  # 按照字母顺序对 API 标签进行排序，方便查找不同类别的 API。
+    operations-sorter: alpha  # 按照字母顺序对每个标签下的 API 操作进行排序，使 API 列表更有条理。
+  api-docs:
+    path: /v3/api-docs  # 设置 OpenAPI 3.0 规范的 API 文档的访问路径，该路径返回 JSON 格式的 API 文档数据。
+  group-configs:
+    - group: 'default'  # 定义一个 API 分组，组名为 'default'，可将不同功能模块的 API 划分到不同组。
+      paths-to-match: '/**'  # 匹配所有路径的 API，将这些 API 纳入到 'default' 分组中。
+      packages-to-scan: com.zhang.rustpbxjava.controller  # 指定扫描的包路径，只有该包下的控制器类中的 API 会被生成文档。
+
+knife4j:
+  enable: true  # 启用 knife4j 增强功能，开启后会在 Swagger UI 基础上添加 knife4j 的增强特性。
+  setting:
+    language: zh_cn  # 设置 knife4j 文档界面的语言为中文，方便中文用户查看和使用。
